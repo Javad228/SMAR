@@ -52,6 +52,11 @@ fi
 # Function to clean up Grobid process on exit
 cleanup() {
     echo "Cleaning up..."
+    # If KEEP_GROBID is set, do not stop the Grobid service (useful for batch runs)
+    if [ -n "$KEEP_GROBID" ] && [ "$KEEP_GROBID" != "0" ]; then
+        echo "Skipping Grobid shutdown due to KEEP_GROBID=$KEEP_GROBID"
+        return
+    fi
     if [ -n "$GROBID_PID" ] && ps -p $GROBID_PID > /dev/null; then
         echo "Stopping Grobid service (PID: $GROBID_PID)..."
         kill $GROBID_PID
